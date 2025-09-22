@@ -47,7 +47,8 @@ function App() {
         </Routes>
       </AnimatePresence>
 
-      <Toaster />
+      {/* 👇 Toaster abajo al centro */}
+      <Toaster position="bottom-center" />
     </>
   );
 }

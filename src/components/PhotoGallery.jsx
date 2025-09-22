@@ -16,7 +16,7 @@ const PhotoGallery = () => {
           className="mb-12"
         >
           <motion.div
-            className="inline-block p-4 bg-gradient-to-r from-yellow-400 to-pink-500 rounded-full mb-6"
+            className="inline-block p-4 bg-gradient-to-r from-red-950 to-red-600 rounded-full mb-6"
             whileHover={{ rotate: 360, scale: 1.1 }}
             transition={{ duration: 0.5 }}
           >

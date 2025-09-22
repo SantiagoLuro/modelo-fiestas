@@ -11,7 +11,7 @@ const CountdownSection = () => {
   });
 
   useEffect(() => {
-    const partyDate = new Date('2025-10-24T21:00:00').getTime();
+    const partyDate = new Date('2025-10-24T21:30:00').getTime();
 
     const timer = setInterval(() => {
       const now = new Date().getTime();
@@ -79,7 +79,7 @@ const CountdownSection = () => {
         </div>
 
         <motion.p
-          className="text-xl dancing-script text-yellow-300 mt-8"
+          className="text-xl dancing-script text-white/80 mt-8"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.5 }}

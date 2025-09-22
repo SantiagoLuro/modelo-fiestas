@@ -19,9 +19,8 @@ const Footer = () => {
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ duration: 3, repeat: Infinity }}
           >
-            <Sparkles className="w-8 h-8 text-yellow-400" />
-            <span className="text-4xl dancing-script gradient-text">Julieta</span>
-            <Sparkles className="w-8 h-8 text-pink-400" />
+            <span className="text-2xl dancing-script gradient-text">Julieta</span>
+
           </motion.div>
           
           <p className="text-xl dancing-script text-white/80 mb-4">
@@ -47,7 +46,7 @@ const Footer = () => {
           viewport={{ once: true }}
         >
           <p className="text-white/50 text-sm">
-            © 2024 - XV Años de Julieta - Una celebración única
+            © 2025 - XV Años de Julieta - Una celebración única
           </p>
         </motion.div>
       </div>

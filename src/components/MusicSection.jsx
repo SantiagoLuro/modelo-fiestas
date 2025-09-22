@@ -18,7 +18,7 @@ const MusicSection = () => {
           className="mb-12"
         >
           <motion.div
-            className="inline-block p-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mb-6"
+            className="inline-block p-4 bg-gradient-to-r from-red-900 to-6ed-500 rounded-full mb-6"
             animate={{ rotate: [0, 10, -10, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
@@ -60,7 +60,7 @@ const MusicSection = () => {
 
         <Link to="/musica">
           <motion.button
-            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-full text-lg font-semibold btn-glow flex items-center space-x-2 mx-auto"
+            className="bg-gradient-to-r from-red-950 to-red-600 text-white px-8 py-4 rounded-full text-lg font-semibold btn-glow flex items-center space-x-2 mx-auto"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}

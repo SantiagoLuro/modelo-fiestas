@@ -15,36 +15,28 @@ function App() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const doc = document.documentElement;
-      const max = Math.max(1, doc.scrollHeight - window.innerHeight);
-      const ratio = Math.min(1, Math.max(0, window.scrollY / max)); // 0..1
-      const pct = ratio * 100;
+      const maxScroll =
+        Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const ratio = Math.min(1, Math.max(0, window.scrollY / maxScroll)); // 0 → 1
+      const percent = ratio * 100;
 
-      // Mantengo tu variable original
-      doc.style.setProperty('--scroll-y', pct);
-      // Ratio 0..1 para controlar la revelación al final
-      doc.style.setProperty('--scroll', String(ratio));
+      // Variables CSS para efectos de fondo/overlay
+      document.documentElement.style.setProperty('--scroll', String(ratio));      // 0..1
+      document.documentElement.style.setProperty('--scroll-y', String(percent));  // 0..100
+      document.documentElement.style.setProperty('--scrollYpx', `${window.scrollY}px`);
     };
 
-    handleScroll(); // set inicial
+    // set inicial + listener
+    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <>
-      {/* Capa de imagen fija (estática, anclada abajo) */}
-      <div className="bg-bottom-layer" aria-hidden="true">
-        <img
-          src="/bg-hands.jpg"
-          alt=""
-          decoding="async"
-          fetchpriority="high"
-          className="bg-bottom-img"
-        />
-      </div>
-
       <FloatingParticles />
+
+      {/* 🎶 Reproductor de fondo */}
       <AudioPlayer src="/maxi-trusso.mp3" />
 
       <AnimatePresence mode="wait">

@@ -48,7 +48,13 @@ function App() {
       </AnimatePresence>
 
       {/* 👇 Toaster abajo al centro */}
-      <Toaster position="bottom-center" />
+      <Toaster
+  position="bottom-center"
+  toastOptions={{
+    className: "bg-[#1a0007]/90 border border-[#800000] text-white rounded-xl shadow-lg backdrop-blur-md"
+  }}
+/>
+
     </>
   );
 }

@@ -1,0 +1,111 @@
+/* ======= Peluquería Admin — Dark UI (frío/pro) ======= */
+:root{
+  --bg: #0f1420;
+  --bg-soft:#121927;
+  --panel:#101827;
+  --elev:#0b1220;
+  --muted:#9aa7bd;
+  --text:#e6eefc;
+  --primary:#4f8cff;      /* azul frío */
+  --primary-2:#1d4ed8;
+  --ok:#22c55e;
+  --warn:#f59e0b;
+  --danger:#ef4444;
+  --stroke:#1f2a44;
+  --chip:#1a2440;
+  --radius:14px;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color:var(--text);
+  background: radial-gradient(1200px 800px at 80% -20%, #1b2a4a30, transparent),
+              linear-gradient(180deg, #0a0f1a, #0b1220 35%, #0f1420 100%);
+}
+
+/* Auth */
+.bg{display:flex; min-height:100vh; align-items:center; justify-content:center; padding:32px}
+.auth-shell{width:100%; max-width:420px}
+.brand{ text-align:center; margin-bottom:18px}
+.brand .logo{
+  width:64px; height:64px; border-radius:16px;
+  display:grid; place-items:center; margin:0 auto 8px;
+  background:linear-gradient(135deg,#1d2b46,#0d1528);
+  box-shadow:var(--shadow); font-size:28px
+}
+.brand h1{margin:0 0 6px; font-size:20px; letter-spacing:.3px}
+.muted{color:var(--muted)}
+.tiny{font-size:12px}
+
+.card{
+  background:linear-gradient(180deg,#0d1628,#0c1425);
+  border:1px solid var(--stroke);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+.form{padding:22px; display:grid; gap:14px}
+.field{display:grid; gap:8px}
+.field span{font-size:13px; color:#9fb0cd}
+input{
+  width:100%; padding:12px 14px; border-radius:12px; outline:none;
+  background:#0b1323; color:var(--text); border:1px solid #1d2743;
+  transition:.2s border-color, .2s box-shadow;
+}
+input:focus{border-color:#2b3e6f; box-shadow:0 0 0 4px #1d2d4f60}
+
+.btn{
+  appearance:none; border:0; cursor:pointer; border-radius:12px;
+  padding:11px 14px; font-weight:600; transition:.2s transform, .2s opacity;
+}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:linear-gradient(180deg,var(--primary),#3c77ea); color:white}
+.btn-ghost{background:#0b1323; color:#cfe1ff; border:1px solid #223154}
+.btn-ghost:hover{opacity:.9}
+.alert{padding:10px 12px; border-radius:10px; font-size:14px}
+.alert.error{background:#2a1321; border:1px solid #5a1f3a; color:#ffb4c4}
+
+/* Topbar */
+.topbar{
+  position:sticky; top:0; z-index:10; display:flex; align-items:center; justify-content:space-between;
+  padding:14px 20px; background:rgba(8,12,22,.7); backdrop-filter: blur(8px);
+  border-bottom:1px solid var(--stroke);
+}
+.topbar__left{display:flex; gap:12px; align-items:center}
+.logo.sm{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#1d2b46,#0d1528)}
+.app{font-weight:700}
+.topbar__right{display:flex; gap:10px; align-items:center}
+.chip{background:var(--chip); color:#cfe1ff; padding:6px 10px; border-radius:999px; border:1px solid #223154}
+
+/* Layout */
+.container{max-width:1100px; margin:22px auto; padding:0 18px; display:grid; gap:18px}
+.grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+@media (max-width:900px){ .grid{grid-template-columns:1fr 1fr} }
+@media (max-width:640px){ .grid{grid-template-columns:1fr} }
+
+.stat{padding:18px}
+.stat__label{color:#9fb0cd; font-size:13px}
+.stat__value{font-size:32px; font-weight:800; letter-spacing:.5px; margin-top:6px}
+
+/* Card sections */
+.card__head{display:flex; align-items:center; justify-content:space-between; padding:16px 18px; border-bottom:1px solid var(--stroke)}
+.card h2{margin:0; font-size:18px}
+.actions{display:flex; gap:8px}
+.table-wrap{overflow:auto}
+.table{width:100%; border-collapse:separate; border-spacing:0}
+.table th, .table td{padding:12px 14px; border-bottom:1px solid #1a2440; text-align:left}
+.table th{color:#a9b7d1; font-weight:600; background:#0e172a; position:sticky; top:0}
+.table tr:hover td{background:#0b1426}
+
+/* Badges */
+.badge{display:inline-block; padding:4px 10px; border-radius:999px; font-size:12px; border:1px solid #273557; background:#0b1323; color:#cfe1ff}
+.badge.ok{background:#0f2a1b; border-color:#1f5a3e; color:#a7f3c6}
+.badge.warn{background:#2a2210; border-color:#5a4a1f; color:#fbd38d}
+.badge.danger{background:#2a1212; border-color:#5a1f1f; color:#feb2b2}
+
+/* Footer */
+.foot{text-align:center; padding:22px 0 30px}
+.center{text-align:center}

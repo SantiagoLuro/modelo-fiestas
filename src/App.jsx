@@ -5,7 +5,7 @@ import { Toaster } from '@/components/ui/toaster';
 import FloatingParticles from '@/components/FloatingParticles';
 import Home from '@/pages/Home';
 import AlbumPage from '@/pages/AlbumPage';
-import AlbumView from '@/pages/AlbumView';   // 👈 import nuevo
+import AlbumView from '@/pages/AlbumView';
 import MusicPage from '@/pages/MusicPage';
 import ConfirmPage from '@/pages/ConfirmPage';
 import AudioPlayer from "./components/AudioPlayer";
@@ -15,27 +15,43 @@ function App() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPercentage =
-        (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
-      document.documentElement.style.setProperty('--scroll-y', scrollPercentage);
+      const doc = document.documentElement;
+      const max = Math.max(1, doc.scrollHeight - window.innerHeight);
+      const ratio = Math.min(1, Math.max(0, window.scrollY / max)); // 0..1
+      const pct = ratio * 100;
+
+      // Mantengo tu variable original
+      doc.style.setProperty('--scroll-y', pct);
+      // Ratio 0..1 para controlar la revelación al final
+      doc.style.setProperty('--scroll', String(ratio));
     };
-    
-    window.addEventListener('scroll', handleScroll);
+
+    handleScroll(); // set inicial
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <>
-      <FloatingParticles />
+      {/* Capa de imagen fija (estática, anclada abajo) */}
+      <div className="bg-bottom-layer" aria-hidden="true">
+        <img
+          src="/bg-hands.jpg"
+          alt=""
+          decoding="async"
+          fetchpriority="high"
+          className="bg-bottom-img"
+        />
+      </div>
 
-      {/* 🎶 Tu reproductor de fondo */}
+      <FloatingParticles />
       <AudioPlayer src="/maxi-trusso.mp3" />
 
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Home />} />
           <Route path="/album" element={<AlbumPage />} />
-          <Route path="/album-view" element={<AlbumView />} /> {/* 👈 nueva ruta */}
+          <Route path="/album-view" element={<AlbumView />} />
           <Route path="/musica" element={<MusicPage />} />
           <Route path="/confirmar" element={<ConfirmPage />} />
         </Routes>

@@ -18,7 +18,7 @@ const DressCode = () => {
             animate={{ rotate: [0, 10, -10, 0] }}
             transition={{ duration: 3, repeat: Infinity }}
           >
-            👗👔
+            
           </motion.div>
           
           <h2 className="text-4xl md:text-5xl playfair gradient-text mb-4">

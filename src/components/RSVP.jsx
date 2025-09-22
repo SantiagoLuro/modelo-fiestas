@@ -18,7 +18,7 @@ const RSVP = () => {
           className="mb-12"
         >
           <motion.div
-            className="inline-block p-4 bg-gradient-to-r from-pink-500 to-red-500 rounded-full mb-6"
+            className="inline-block p-4 bg-gradient-to-r from-red-900 to-red-700 rounded-full mb-6"
             animate={{ scale: [1, 1.1, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
@@ -32,7 +32,7 @@ const RSVP = () => {
           <p className="text-xl text-white/80 mb-4">
             Cuento con tu presencia.
           </p>
-          <p className="text-lg dancing-script text-yellow-300">
+          <p className="text-lg dancing-script text-gray-200">
             ¡Confirmá tu asistencia!
           </p>
         </motion.div>

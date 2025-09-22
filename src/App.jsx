@@ -15,18 +15,13 @@ function App() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const maxScroll =
-        Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       const ratio = Math.min(1, Math.max(0, window.scrollY / maxScroll)); // 0 → 1
       const percent = ratio * 100;
-
-      // Variables CSS para efectos de fondo/overlay
       document.documentElement.style.setProperty('--scroll', String(ratio));      // 0..1
       document.documentElement.style.setProperty('--scroll-y', String(percent));  // 0..100
-      document.documentElement.style.setProperty('--scrollYpx', `${window.scrollY}px`);
     };
 
-    // set inicial + listener
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -34,9 +29,10 @@ function App() {
 
   return (
     <>
-      <FloatingParticles />
+      {/* Imagen SOLO en el fondo (se muestra al final) */}
+      <div className="bottom-photo" aria-hidden="true" />
 
-      {/* 🎶 Reproductor de fondo */}
+      <FloatingParticles />
       <AudioPlayer src="/maxi-trusso.mp3" />
 
       <AnimatePresence mode="wait">

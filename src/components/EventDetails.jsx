@@ -12,7 +12,8 @@ const EventDetails = () => {
     {
       icon: Clock,
       title: 'Hora',
-      info: '21:00 hs - 5:30hs (por favor, ser puntuales)',
+      info: '21:00 hs - 5:30hs',
+      subtitle: '(Por favor, ser puntuales)',
     },
     {
       icon: MapPin,

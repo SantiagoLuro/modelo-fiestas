@@ -1,4 +1,4 @@
-/* ===== Google Fonts elegantes ===== */
+/* ===== Google Fonts ===== */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&family=Great+Vibes&display=swap');
 
 @tailwind base;
@@ -6,59 +6,49 @@
 @tailwind utilities;
 
 /* ===== Fuentes locales ===== */
-@font-face {
-  font-family: 'Sprite Graffiti';
-  src: url('./assets/fonts/SpriteGraffiti-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+@font-face{
+  font-family:'Sprite Graffiti';
+  src:url('./assets/fonts/SpriteGraffiti-Regular.ttf') format('truetype');
+  font-display:swap;
 }
-@font-face {
-  font-family: 'Klemer Display';
-  src: url('./assets/fonts/KlemerDisplayDemoRegular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+@font-face{
+  font-family:'Klemer Display';
+  src:url('./assets/fonts/KlemerDisplayDemoRegular.ttf') format('truetype');
+  font-display:swap;
 }
 
-/* ===== Tema / variables ===== */
-:root {
-  --primary-gold: #d4af37;
-  --primary-rose: #8b0000;
-  --primary-purple: #50010c;
-  --dark-bg: #0a0a0a;
-  --light-bg: #f8f9fa;
+/* ===== Variables ===== */
+:root{
+  --primary-gold:#d4af37;
+  --primary-rose:#8b0000;
+  --primary-purple:#50010c;
+  --scroll:0;      /* 0..1 (set en App.jsx) */
+  --scroll-y:0;    /* 0..100 (set en App.jsx) */
 
-  /* Scroll (se setea en App.jsx) */
-  --scroll-y: 0;   /* 0 → 100 */
-  --scroll: 0;     /* 0 → 1   */
+  /* Parallax: cuánto se mueve la imagen (en vh) */
+  --parallax-range: 18vh;
 
-  /* Aparición de la foto SOLO al final */
-  --reveal-start: 0.82;
-  --reveal-slope: 5.55; /* 1 / (1 - 0.82) */
+  /* Mezcla al final: umbral y pendiente (para aparición) */
+  --reveal-start: 0.80;
+  --reveal-slope: 5; /* llega a 1 en el final */
 }
 
 /* ===== Reset ===== */
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  overflow-x: hidden;
-  background-color: #000;
-  color: #fff;
-  min-height: 100vh;
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:#fff; background:#000; overflow-x:hidden; min-height:100vh;
 }
 
-/* ===== CAPA SUPERIOR: degradé (sin negro plano y con tinte mínimo) ===== */
-body::before {
-  content: '';
-  position: fixed; inset: 0;
+/* ===== Degradé superior de tu tema (NO toco colores de secciones) ===== */
+body::before{
+  content:''; position:fixed; inset:0; z-index:-1;
   background: linear-gradient(160deg, #120000 15%, #3a0000 55%, #660000 100%);
-  background-size: 100% 300%;
+  background-size:100% 300%;
   background-position-y: calc(var(--scroll-y) * 1%);
-  z-index: -1;
-  transition: background-position-y 0.3s ease-out, opacity .2s linear;
+  transition: background-position-y .3s ease-out, opacity .2s linear;
 
-  /* Nunca llega a 0 del todo para mantener cohesión cromática */
+  /* Tinte mínimo para legibilidad: nunca 0 total (evita “cortes”) */
   opacity: clamp(
     0.20,
     calc(0.95 - (max(0, (var(--scroll) - var(--reveal-start))) * var(--reveal-slope))),
@@ -66,114 +56,77 @@ body::before {
   );
 }
 
-/* ===== CAPA INFERIOR: FOTO SOLO ABAJO (sin parallax ni blur) ===== */
-.bottom-photo{
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  height: 60vh;                       /* alto de la franja con foto */
-  z-index: -2;
-  pointer-events: none;
+/* ===== Imagen de fondo nítida + parallax suave ===== */
+.bg-parallax{ position:fixed; inset:0; z-index:-3; pointer-events:none; }
+.bg-parallax__img{
+  position:absolute; inset:0; width:100vw; height:100vh;
+  object-fit:cover; object-position:center bottom;
+  image-rendering:auto; /* para fotos -> nítido */
+  /* Parallax: acompaña el scroll sin perder calidad (solo translate3d) */
+  transform: translate3d(0, calc(var(--scroll) * -1 * var(--parallax-range)), 0);
+  will-change: transform;
+  transition: transform .1s linear;
+}
 
-  background: url('/bg-bottom.jpg') center bottom / cover no-repeat;
+/* Feather/Blend con máscara (sin cortes duros en la unión) */
+.bg-parallax::before{
+  content:''; position:absolute; inset:0;
+  /* Máscara: visible abajo, se difumina hacia arriba (blanco=visible) */
+  -webkit-mask-image: linear-gradient(to top,
+    rgba(255,255,255,1) 0%,
+    rgba(255,255,255,1) 65%,
+    rgba(255,255,255,0) 97%);
+  mask-image: linear-gradient(to top,
+    rgba(255,255,255,1) 0%,
+    rgba(255,255,255,1) 65%,
+    rgba(255,255,255,0) 97%);
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+  -webkit-mask-size:100% 100%; mask-size:100% 100%;
+  -webkit-mask-position:center bottom; mask-position:center bottom;
 
-  /* Aparece SOLO cerca del final */
+  /* Overlay de tono para igualar temperatura sin alterar secciones */
+  background: linear-gradient(180deg,
+    rgba(138,0,0,0.30) 0%,
+    rgba(138,0,0,0.22) 45%,
+    rgba(138,0,0,0.16) 100%);
   opacity: clamp(0, calc((var(--scroll) - var(--reveal-start)) * var(--reveal-slope)), 1);
-  transition: opacity .25s linear;
-
-  /* >>> Difuminado superior (sin cortes) usando máscara */
-  /* blanco = visible, transparente = invisible */
-  -webkit-mask-image: linear-gradient(
-      to top,
-      rgba(255,255,255,1) 0%,
-      rgba(255,255,255,1) 58%,
-      rgba(255,255,255,0) 95%
-  );
-  mask-image: linear-gradient(
-      to top,
-      rgba(255,255,255,1) 0%,
-      rgba(255,255,255,1) 58%,
-      rgba(255,255,255,0) 95%
-  );
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center bottom;
-  mask-position: center bottom;
-
-  /* Overlay de tono sutil para igualar temperaturas (bordó/rojo) */
-  position: fixed;
-}
-.bottom-photo::after{
-  content:'';
-  position:absolute; inset:0;
-  background: linear-gradient(
-    180deg,
-    rgba(138,0,0,0.32) 0%,
-    rgba(138,0,0,0.24) 40%,
-    rgba(138,0,0,0.18) 100%
-  );
   pointer-events:none;
-  /* Sigue la misma opacidad de aparición que la foto */
-  opacity: inherit;
 }
 
-/* ===== Tipografía ===== */
-.playfair { font-family: 'Playfair Display', Georgia, 'Times New Roman', serif; letter-spacing: .01em; }
-.dancing-script { font-family: 'Great Vibes', cursive; }
-.font-horizon, .font-sprite { font-family: 'Sprite Graffiti', system-ui, sans-serif; letter-spacing: .02em; }
-.font-klemer { font-family: 'Klemer Display', Georgia, serif; }
-.font-poppins { font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
-.font-greatvibes { font-family: 'Great Vibes', cursive; }
+/* ===== Tipografía utilitaria (igual que antes) ===== */
+.playfair{ font-family:'Playfair Display', Georgia, 'Times New Roman', serif; letter-spacing:.01em; }
+.dancing-script{ font-family:'Great Vibes', cursive; }
+.font-horizon,.font-sprite{ font-family:'Sprite Graffiti', system-ui, sans-serif; letter-spacing:.02em; }
+.font-klemer{ font-family:'Klemer Display', Georgia, serif; }
+.font-poppins{ font-family:'Poppins', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+.font-greatvibes{ font-family:'Great Vibes', cursive; }
 
-/* ===== Efectos ===== */
-.floating-particles { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
-.particle {
-  position: absolute; border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,.4) 0%, rgba(255,255,255,.1) 70%, transparent 100%);
-  animation: float 6s ease-in-out infinite;
+/* ===== Partículas y extras (sin cambios) ===== */
+.floating-particles{ position:fixed; inset:0; pointer-events:none; z-index:1; }
+.particle{ position:absolute; border-radius:50%;
+  background:radial-gradient(circle, rgba(255,255,255,.4) 0%, rgba(255,255,255,.1) 70%, transparent 100%);
+  animation:float 6s ease-in-out infinite;
 }
-.particle:nth-child(odd){
-  animation-delay:-2s;
-  background: radial-gradient(circle, rgba(139,0,0,.3) 0%, rgba(139,0,0,.05) 70%, transparent 100%);
-}
-.particle:nth-child(3n){
-  animation-delay:-4s;
-  background: radial-gradient(circle, rgba(255,255,255,.5) 0%, rgba(255,255,255,.1) 70%, transparent 100%);
-}
-@keyframes float { 0%,100%{transform:translateY(0) rotate(0);opacity:.7} 50%{transform:translateY(-20px) rotate(180deg);opacity:1} }
+.particle:nth-child(odd){ animation-delay:-2s; background:radial-gradient(circle, rgba(139,0,0,.3) 0%, rgba(139,0,0,.05) 70%, transparent 100%); }
+.particle:nth-child(3n){ animation-delay:-4s; background:radial-gradient(circle, rgba(255,255,255,.5) 0%, rgba(255,255,255,.1) 70%, transparent 100%); }
+@keyframes float{0%,100%{transform:translateY(0) rotate(0);opacity:.7}50%{transform:translateY(-20px) rotate(180deg);opacity:1}}
 
-/* Texto con degradé bordó–dorado */
-.gradient-text{
-  background: linear-gradient(135deg, #ffffff, #8b0000, #ffffff);
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-}
-
-/* Glassmorphism y extras */
-.glass-effect{ background:rgba(0,0,0,.2); backdrop-filter: blur(10px); border:1px solid rgba(255,255,255,.1); }
+.gradient-text{ background:linear-gradient(135deg,#fff,#8b0000,#fff);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+.glass-effect{ background:rgba(0,0,0,.2); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,.1); }
 .btn-glow{ box-shadow:0 0 20px rgba(139,0,0,.5); transition:all .3s ease; }
-.btn-glow:hover{ box-shadow:0 0 30px rgba(139,0,0,.8); transform: translateY(-2px); }
+.btn-glow:hover{ box-shadow:0 0 30px rgba(139,0,0,.8); transform:translateY(-2px); }
 .sparkle{ position:relative; overflow:hidden; }
-.sparkle::before{
-  content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%;
-  background:linear-gradient(45deg, transparent, rgba(255,255,255,.25), transparent);
-  animation:sparkle 3s linear infinite;
-}
-@keyframes sparkle{ 0%{transform:translate(-100%,-100%) rotate(45deg)} 100%{transform:translate(100%,100%) rotate(45deg)} }
-.disco-ball{
-  background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,.8) 2px, transparent 2px),
-    radial-gradient(circle at 70% 30%, rgba(255,255,255,.6) 1px, transparent 1px),
-    radial-gradient(circle at 30% 70%, rgba(255,255,255,.7) 1.5px, transparent 1.5px),
-    radial-gradient(circle at 70% 70%, rgba(255,255,255,.5) 1px, transparent 1px),
-    linear-gradient(135deg, #c0c0c0, #808080);
-  background-size: 20px 20px, 15px 15px, 18px 18px, 12px 12px, 100% 100%;
-  animation: rotate 4s linear infinite;
-}
-@keyframes rotate{from{transform:rotate(0)} to{transform:rotate(360deg)}}
-.countdown-glow{ text-shadow: 0 0 20px rgba(139,0,0,.8); }
-.section-divider{
-  height:2px;
-  background:linear-gradient(90deg, transparent, var(--primary-gold), #ffffff, var(--primary-gold), transparent);
-  margin:4rem 0;
-}
+.sparkle::before{ content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%;
+  background:linear-gradient(45deg,transparent,rgba(255,255,255,.25),transparent); animation:sparkle 3s linear infinite; }
+@keyframes sparkle{0%{transform:translate(-100%,-100%) rotate(45deg)}100%{transform:translate(100%,100%) rotate(45deg)}}
+.disco-ball{ background:
+  radial-gradient(circle at 30% 30%, rgba(255,255,255,.8) 2px, transparent 2px),
+  radial-gradient(circle at 70% 30%, rgba(255,255,255,.6) 1px, transparent 1px),
+  radial-gradient(circle at 30% 70%, rgba(255,255,255,.7) 1.5px, transparent 1.5px),
+  radial-gradient(circle at 70% 70%, rgba(255,255,255,.5) 1px, transparent 1px),
+  linear-gradient(135deg,#c0c0c0,#808080);
+  background-size:20px 20px,15px 15px,18px 18px,12px 12px,100% 100%; animation:rotate 4s linear infinite;}
+@keyframes rotate{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.countdown-glow{ text-shadow:0 0 20px rgba(139,0,0,.8); }
+.section-divider{ height:2px; background:linear-gradient(90deg,transparent,var(--primary-gold),#fff,var(--primary-gold),transparent); margin:4rem 0; }

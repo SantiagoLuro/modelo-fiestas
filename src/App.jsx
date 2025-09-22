@@ -29,8 +29,10 @@ function App() {
 
   return (
     <>
-      {/* Imagen SOLO en el fondo (se muestra al final) */}
-      <div className="bottom-photo" aria-hidden="true" />
+      {/* Fondo con imagen nítida + parallax suave */}
+      <div className="bg-parallax" aria-hidden="true">
+        <img src="/bg-bottom.jpg" alt="" className="bg-parallax__img" decoding="async" fetchpriority="high" />
+      </div>
 
       <FloatingParticles />
       <AudioPlayer src="/maxi-trusso.mp3" />

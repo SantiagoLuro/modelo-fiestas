@@ -55,7 +55,7 @@ const DressCode = () => {
 <p className="text-white/80">
   Vestimenta elegante y oscura.  
 </p>
-  <p className="text-white/80">No traer: rojo, plateado, brillos, naranja, amarillo y colores claros.</p>
+  <p className="text-white/80">No traer: rojo, brillos, plateado, colores claros.</p>
 </motion.div>
 
 <motion.div
@@ -66,7 +66,7 @@ const DressCode = () => {
   <h4 className="text-xl playfair gradient-text mb-2">Hombres</h4>
   <p className="text-white/80">
     Traje o vestimenta formal en tonos oscuros.  
-    <p>No traer: rojo, plateado, brillos, naranja, amarillo y colores claros.</p>
+    <p> No traer: rojo, brillos, plateado, colores claros.</p>
   </p>
 </motion.div>
 

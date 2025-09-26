@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
@@ -6,10 +5,10 @@ const FloatingParticles = () => {
   const [particles, setParticles] = useState([]);
 
   useEffect(() => {
-    const generateParticles = () => {
-      const newParticles = [];
+    const regen = () => {
+      const arr = [];
       for (let i = 0; i < 50; i++) {
-        newParticles.push({
+        arr.push({
           id: i,
           x: Math.random() * window.innerWidth,
           y: Math.random() * window.innerHeight,
@@ -17,37 +16,28 @@ const FloatingParticles = () => {
           delay: Math.random() * 5,
         });
       }
-      setParticles(newParticles);
+      setParticles(arr);
     };
-
-    generateParticles();
-    window.addEventListener('resize', generateParticles);
-    return () => window.removeEventListener('resize', generateParticles);
+    regen();
+    window.addEventListener('resize', regen);
+    return () => window.removeEventListener('resize', regen);
   }, []);
 
   return (
-    <div className="floating-particles">
-      {particles.map((particle) => (
+    <div className="pointer-events-none fixed inset-0 -z-20">
+      {particles.map((p) => (
         <motion.div
-          key={particle.id}
-          className="particle"
+          key={p.id}
+          className="absolute rounded-full"
           style={{
-            left: particle.x,
-            top: particle.y,
-            width: particle.size,
-            height: particle.size,
+            left: p.x,
+            top: p.y,
+            width: p.size,
+            height: p.size,
+            background: 'rgba(255, 105, 180, 0.5)',
           }}
-          animate={{
-            y: [0, -30, 0],
-            x: [0, 15, -15, 0],
-            opacity: [0.3, 1, 0.3],
-          }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            delay: particle.delay,
-            ease: "easeInOut",
-          }}
+          animate={{ y: [0, -30, 0], x: [0, 15, -15, 0], opacity: [0.3, 1, 0.3] }}
+          transition={{ duration: 6, repeat: Infinity, delay: p.delay, ease: 'easeInOut' }}
         />
       ))}
     </div>

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
@@ -6,15 +5,51 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, Music, Send } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 
+// =================== CONFIG ===================
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwWAC77Q6eDfhBcwEb_p-R1M3JBMS_9vPC7JDLcUFYWniN0ku9VfFNY7D88zZDzD3sk/exec"; // <— poné tu URL
+const SHARED_SECRET = "abc123-julieta-xv"; // Debe coincidir con Code.gs
+// ==============================================
+
 const MusicPage = () => {
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    toast({
-      title: "¡Sugerencia enviada!",
-      description: "Gracias por ayudarnos a crear la playlist perfecta. 🎶",
-      duration: 4000,
-    });
-    e.target.reset();
+    const sugerencia = e.target.elements[0].value.trim();
+    if (!sugerencia) return;
+
+    const payload = {
+      secret: SHARED_SECRET,
+      type: "music",
+      sugerencia
+    };
+
+    let ok = true;
+    try {
+      await fetch(WEB_APP_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+    } catch (err) {
+      console.error("Error enviando sugerencia:", err);
+      ok = false;
+    }
+
+    if (ok) {
+      toast({
+        title: "¡Sugerencia enviada!",
+        description: "Gracias por ayudarnos a crear la playlist perfecta. 🎶",
+        duration: 4000,
+      });
+      e.target.reset();
+    } else {
+      toast({
+        title: "Error",
+        description: "No se pudo enviar tu sugerencia. Probá más tarde.",
+        variant: "destructive",
+        duration: 4000,
+      });
+    }
   };
 
   return (
@@ -37,14 +72,8 @@ const MusicPage = () => {
         <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden">
           <motion.div
             className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-purple-200 via-pink-200 to-yellow-100 opacity-50"
-            animate={{
-              rotate: 360,
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              ease: 'linear'
-            }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
           />
           <div className="relative p-8 md:p-12 text-center z-10">
             <motion.div

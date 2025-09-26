@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
@@ -6,18 +5,73 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, User, CheckCircle, XCircle, Users, Utensils } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 
+// =================== CONFIG ===================
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwWAC77Q6eDfhBcwEb_p-R1M3JBMS_9vPC7JDLcUFYWniN0ku9VfFNY7D88zZDzD3sk/exec"; // <— poné tu URL
+const SHARED_SECRET = "abc123-julieta-xv"; // Debe coincidir con Code.gs
+// ==============================================
+
 const ConfirmPage = () => {
   const [asistencia, setAsistencia] = useState('');
+  const [nombre, setNombre] = useState('');
+  const [familiares, setFamiliares] = useState('');
+  const [restricciones, setRestricciones] = useState('');
+  const [enviando, setEnviando] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    toast({
-      title: "¡Confirmación recibida!",
-      description: "¡Gracias por responder! Te esperamos para celebrar. 🎉",
-      duration: 4000,
-    });
-    e.target.reset();
+  const resetForm = () => {
     setAsistencia('');
+    setNombre('');
+    setFamiliares('');
+    setRestricciones('');
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!asistencia || !nombre.trim()) return;
+
+    setEnviando(true);
+
+    const payload = {
+      secret: SHARED_SECRET,
+      type: 'rsvp',
+      nombre: nombre.trim(),
+      asistencia: asistencia === 'si' ? 'Sí' : 'No',
+      familiares: asistencia === 'si' ? (familiares || '') : '',
+      restricciones: asistencia === 'si' ? (restricciones || '') : ''
+    };
+
+    // Nota: Apps Script no agrega CORS por defecto.
+    // Usamos 'no-cors' para evitar el bloqueo; no podremos leer la respuesta.
+    let ok = true;
+    try {
+      await fetch(WEB_APP_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+    } catch (err) {
+      console.error('Error enviando RSVP:', err);
+      ok = false;
+    }
+
+    setEnviando(false);
+
+    if (ok) {
+      toast({
+        title: "¡Confirmación recibida!",
+        description: `Gracias ${payload.nombre}. ${payload.asistencia === 'Sí' ? '¡Te esperamos para celebrar! 🎉' : 'Lamentamos que no puedas venir 💗'}`,
+        duration: 4000,
+      });
+      resetForm();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      toast({
+        title: "Hubo un problema",
+        description: "Intentá nuevamente más tarde.",
+        duration: 4000,
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -26,14 +80,18 @@ const ConfirmPage = () => {
         <title>Confirmar Asistencia - XV de Julieta</title>
         <meta name="description" content="Confirma tu asistencia a la fiesta de XV de Julieta." />
       </Helmet>
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.5 }}
-        className="min-h-screen flex items-center justify-center bg-gray-100 p-4"
+        className="relative min-h-screen flex items-center justify-center bg-gray-100 p-4"
       >
-        <Link to="/" className="absolute top-4 left-4 text-gray-600 bg-white/50 p-2 rounded-full hover:bg-white transition-colors z-20">
+        <Link
+          to="/"
+          className="absolute top-4 left-4 text-gray-600 bg-white/50 p-2 rounded-full hover:bg-white transition-colors z-30"
+        >
           <ArrowLeft size={24} />
         </Link>
 
@@ -41,38 +99,83 @@ const ConfirmPage = () => {
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="w-full max-w-lg bg-white rounded-2xl shadow-xl p-8 md:p-10"
+          className="relative z-50 w-full max-w-lg bg-white rounded-2xl shadow-xl p-8 md:p-10"
         >
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-800 playfair mb-2">Confirmación de Asistencia</h1>
-            <p className="text-gray-500">Ingresa tus datos y confirma tu asistencia.</p>
+            <p className="text-gray-500">Ingresá tus datos y confirmá tu asistencia.</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form
+            onSubmit={handleSubmit}
+            onKeyDownCapture={(e) => e.stopPropagation()}
+            className="space-y-6"
+          >
+            {/* Nombre */}
             <div>
-              <label className="font-semibold text-gray-700 flex items-center gap-2 mb-2">
+              <label htmlFor="nombre" className="font-semibold text-gray-700 flex items-center gap-2 mb-2">
                 <User size={18} className="text-pink-500" />
                 Nombre y Apellido
               </label>
-              <input type="text" required className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-300 transition" />
+              <input
+                id="nombre"
+                name="nombre"
+                type="text"
+                autoComplete="off"
+                required
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                placeholder="Ej: Juan Pérez"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-300 transition
+                           text-gray-900 placeholder:text-gray-400 caret-pink-500 bg-white"
+              />
             </div>
 
+            {/* Asistencia */}
             <div>
-              <label className="font-semibold text-gray-700 mb-3 block">Asistencia</label>
+              <span className="font-semibold text-gray-700 mb-3 block">Asistencia</span>
               <div className="flex flex-col sm:flex-row gap-4">
-                <motion.label whileTap={{ scale: 0.95 }} className={`flex-1 p-4 border rounded-lg cursor-pointer transition-all duration-300 flex items-center gap-3 ${asistencia === 'si' ? 'bg-green-100 border-green-400 ring-2 ring-green-300' : 'border-gray-300'}`}>
-                  <input type="radio" name="asistencia" value="si" required className="hidden" onChange={(e) => setAsistencia(e.target.value)} />
+                <motion.label
+                  htmlFor="asiste-si"
+                  whileTap={{ scale: 0.95 }}
+                  className={`flex-1 p-4 border rounded-lg cursor-pointer transition-all duration-300 flex items-center gap-3 ${asistencia === 'si' ? 'bg-green-100 border-green-400 ring-2 ring-green-300' : 'border-gray-300'}`}
+                >
+                  <input
+                    id="asiste-si"
+                    type="radio"
+                    name="asistencia"
+                    value="si"
+                    required
+                    checked={asistencia === 'si'}
+                    onChange={(e) => setAsistencia(e.target.value)}
+                    className="hidden"
+                  />
                   <CheckCircle size={20} className={asistencia === 'si' ? 'text-green-600' : 'text-gray-400'} />
                   <span className={asistencia === 'si' ? 'text-green-800 font-semibold' : 'text-gray-700'}>Sí, confirmo</span>
                 </motion.label>
-                <motion.label whileTap={{ scale: 0.95 }} className={`flex-1 p-4 border rounded-lg cursor-pointer transition-all duration-300 flex items-center gap-3 ${asistencia === 'no' ? 'bg-red-100 border-red-400 ring-2 ring-red-300' : 'border-gray-300'}`}>
-                  <input type="radio" name="asistencia" value="no" required className="hidden" onChange={(e) => setAsistencia(e.target.value)} />
+
+                <motion.label
+                  htmlFor="asiste-no"
+                  whileTap={{ scale: 0.95 }}
+                  className={`flex-1 p-4 border rounded-lg cursor-pointer transition-all duration-300 flex items-center gap-3 ${asistencia === 'no' ? 'bg-red-100 border-red-400 ring-2 ring-red-300' : 'border-gray-300'}`}
+                >
+                  <input
+                    id="asiste-no"
+                    type="radio"
+                    name="asistencia"
+                    value="no"
+                    required
+                    checked={asistencia === 'no'}
+                    onChange={(e) => setAsistencia(e.target.value)}
+                    className="hidden"
+                  />
                   <XCircle size={20} className={asistencia === 'no' ? 'text-red-600' : 'text-gray-400'} />
                   <span className={asistencia === 'no' ? 'text-red-800 font-semibold' : 'text-gray-700'}>No podré asistir</span>
                 </motion.label>
               </div>
             </div>
 
+            {/* Campos condicionales */}
             {asistencia === 'si' && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
@@ -80,29 +183,48 @@ const ConfirmPage = () => {
                 className="space-y-6"
               >
                 <div>
-                  <label className="font-semibold text-gray-700 flex items-center gap-2 mb-2">
+                  <label htmlFor="familiares" className="font-semibold text-gray-700 flex items-center gap-2 mb-2">
                     <Users size={18} className="text-purple-500" />
-                    ¿Asistes con tu grupo familiar?
+                    ¿Asistís con tu grupo familiar?
                   </label>
-                  <textarea rows="2" placeholder="Indicar cantidad de asistentes y nombres (según corresponda)" className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-300 transition resize-none" />
+                  <textarea
+                    id="familiares"
+                    name="familiares"
+                    rows="2"
+                    value={familiares}
+                    onChange={(e) => setFamiliares(e.target.value)}
+                    placeholder="Indicar cantidad y nombres (si corresponde)"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-300 transition
+                               text-gray-900 placeholder:text-gray-400 caret-pink-500 bg-white"
+                  />
                 </div>
                 <div>
-                  <label className="font-semibold text-gray-700 flex items-center gap-2 mb-2">
+                  <label htmlFor="restricciones" className="font-semibold text-gray-700 flex items-center gap-2 mb-2">
                     <Utensils size={18} className="text-yellow-500" />
-                    ¿Tienes alguna restricción alimenticia?
+                    ¿Tenés alguna restricción alimenticia?
                   </label>
-                  <textarea rows="2" placeholder="Vegano/a, celíaco/a, otra..." className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-300 transition resize-none" />
+                  <textarea
+                    id="restricciones"
+                    name="restricciones"
+                    rows="2"
+                    value={restricciones}
+                    onChange={(e) => setRestricciones(e.target.value)}
+                    placeholder="Vegano/a, celíaco/a, otra..."
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-300 transition
+                               text-gray-900 placeholder:text-gray-400 caret-pink-500 bg-white"
+                  />
                 </div>
               </motion.div>
             )}
 
             <motion.button
               type="submit"
-              className="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold py-4 px-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              disabled={enviando}
+              className="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold py-4 px-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-70"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              Enviar Confirmación
+              {enviando ? 'Enviando…' : 'Enviar Confirmación'}
             </motion.button>
           </form>
         </motion.div>

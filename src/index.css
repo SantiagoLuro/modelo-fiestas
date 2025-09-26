@@ -130,3 +130,20 @@ body::before{
 @keyframes rotate{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 .countdown-glow{ text-shadow:0 0 20px rgba(139,0,0,.8); }
 .section-divider{ height:2px; background:linear-gradient(90deg,transparent,var(--primary-gold),#fff,var(--primary-gold),transparent); margin:4rem 0; }
+
+/* Fondo y partículas abajo de todo y sin capturar clicks */
+.bg-parallax, .floating-particles {
+  pointer-events: none !important;
+  z-index: -20 !important;
+}
+
+/* Por si algún overlay global tapa cosas sin querer */
+.overlay, .cover, .backdrop {
+  pointer-events: none;
+}
+
+input, textarea {
+  color: #111 !important;
+  background: #fff;
+  caret-color: #ec4899;
+}

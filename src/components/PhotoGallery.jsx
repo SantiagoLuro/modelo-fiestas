@@ -1,8 +1,42 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Camera } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast } from '@/components/ui/use-toast';
+
+// Snackbar bien simple abajo-centro
+const Snack = ({ open, title, desc, onClose }) => {
+  useEffect(() => {
+    if (!open) return;
+    const t = setTimeout(onClose, 4500);
+    return () => clearTimeout(t);
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className="fixed left-1/2 -translate-x-1/2 z-[90] pointer-events-auto"
+      style={{ bottom: 'calc(16px + env(safe-area-inset-bottom))' }}
+    >
+      <div className="max-w-[560px] w-[calc(100%-2rem)] md:w-auto rounded-xl shadow-2xl border border-white/10 bg-black text-white px-4 py-3 flex items-start gap-3">
+        <div className="min-w-0">
+          <p className="font-semibold leading-tight">{title}</p>
+          {desc ? (
+            <p className="text-sm opacity-90 leading-snug break-words">{desc}</p>
+          ) : null}
+        </div>
+        <button
+          onClick={onClose}
+          className="ml-auto text-sm opacity-80 hover:opacity-100 underline underline-offset-2"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const PhotoGallery = () => {
   const navigate = useNavigate();
@@ -10,21 +44,31 @@ const PhotoGallery = () => {
   // Cambiá esto a true cuando quieras habilitar el álbum
   const ENABLE_UPLOADS = false;
 
-  const handleAlbumClick = useCallback((e) => {
-    if (!ENABLE_UPLOADS) {
-      // Evita navegar y muestra el cartelito
-      e.preventDefault();
-      toast({
-        title: "¡Muy pronto!",
-        description:
-          "El día del evento se habilitará subir las fotos que compartiste en la fiesta. 💃📸",
-        duration: 4500,
-      });
-      return;
-    }
-    // Si está habilitado, navegá normalmente
-    navigate('/album');
-  }, [navigate, ENABLE_UPLOADS]);
+  // Estado del snackbar
+  const [snackOpen, setSnackOpen] = useState(false);
+  const [snackTitle, setSnackTitle] = useState('');
+  const [snackDesc, setSnackDesc] = useState('');
+
+  const showSnack = (title, desc) => {
+    setSnackTitle(title);
+    setSnackDesc(desc);
+    setSnackOpen(true);
+  };
+
+  const handleAlbumClick = useCallback(
+    (e) => {
+      if (!ENABLE_UPLOADS) {
+        e.preventDefault();
+        showSnack(
+          '¡Muy pronto!',
+          'El día del evento se habilitará subir las fotos que compartiste en la fiesta. 💃📸'
+        );
+        return;
+      }
+      navigate('/album');
+    },
+    [navigate, ENABLE_UPLOADS]
+  );
 
   return (
     <section className="py-20 px-4 bg-black/30 relative">
@@ -65,7 +109,11 @@ const PhotoGallery = () => {
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
           >
-            <img className="w-full h-full object-cover rounded-2xl" alt="Julieta de niña con gorro" src="https://horizons-cdn.hostinger.com/701bc10f-3750-4d01-8fb2-1c567ca2f257/110c3015a22d66e5c470f02034a6a35b.jpg" />
+            <img
+              className="w-full h-full object-cover rounded-2xl"
+              alt="Julieta de niña con gorro"
+              src="https://horizons-cdn.hostinger.com/701bc10f-3750-4d01-8fb2-1c567ca2f257/110c3015a22d66e5c470f02034a6a35b.jpg"
+            />
           </motion.div>
 
           <motion.div
@@ -73,7 +121,11 @@ const PhotoGallery = () => {
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
           >
-            <img className="w-full h-full object-cover rounded-2xl" alt="Julieta de bebé" src="https://horizons-cdn.hostinger.com/701bc10f-3750-4d01-8fb2-1c567ca2f257/17c2ea9bec6aa740c1f23eb9feb7da8e.jpg" />
+            <img
+              className="w-full h-full object-cover rounded-2xl"
+              alt="Julieta de bebé"
+              src="https://horizons-cdn.hostinger.com/701bc10f-3750-4d01-8fb2-1c567ca2f257/17c2ea9bec6aa740c1f23eb9feb7da8e.jpg"
+            />
           </motion.div>
 
           <motion.div
@@ -81,7 +133,11 @@ const PhotoGallery = () => {
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
           >
-            <img className="w-full h-full object-cover rounded-2xl" alt="Julieta en la playa" src="https://horizons-cdn.hostinger.com/701bc10f-3750-4d01-8fb2-1c567ca2f257/cb3f8851c2ec63d18541b5ce35fd8d47.jpg" />
+            <img
+              className="w-full h-full object-cover rounded-2xl"
+              alt="Julieta en la playa"
+              src="https://horizons-cdn.hostinger.com/701bc10f-3750-4d01-8fb2-1c567ca2f257/cb3f8851c2ec63d18541b5ce35fd8d47.jpg"
+            />
           </motion.div>
 
           <motion.div
@@ -89,7 +145,11 @@ const PhotoGallery = () => {
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
           >
-            <img className="w-full h-full object-cover rounded-2xl" alt="Julieta con bengala" src="https://horizons-cdn.hostinger.com/701bc10f-3750-4d01-8fb2-1c567ca2f257/1af7a43dd9a257046a5e5b756c92071a.jpg" />
+            <img
+              className="w-full h-full object-cover rounded-2xl"
+              alt="Julieta con bengala"
+              src="https://horizons-cdn.hostinger.com/701bc10f-3750-4d01-8fb2-1c567ca2f257/1af7a43dd9a257046a5e5b756c92071a.jpg"
+            />
           </motion.div>
         </motion.div>
 
@@ -108,6 +168,14 @@ const PhotoGallery = () => {
           </motion.button>
         </Link>
       </div>
+
+      {/* Snackbar abajo-centro */}
+      <Snack
+        open={snackOpen}
+        title={snackTitle}
+        desc={snackDesc}
+        onClose={() => setSnackOpen(false)}
+      />
     </section>
   );
 };

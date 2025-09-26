@@ -1,14 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, User, CheckCircle, XCircle, Users, Utensils } from 'lucide-react';
-import { toast } from '@/components/ui/use-toast';
 
 // =================== CONFIG ===================
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwWAC77Q6eDfhBcwEb_p-R1M3JBMS_9vPC7JDLcUFYWniN0ku9VfFNY7D88zZDzD3sk/exec"; // <— poné tu URL
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwWAC77Q6eDfhBcwEb_p-R1M3JBMS_9vPC7JDLcUFYWniN0ku9VfFNY7D88zZDzD3sk/exec"; // <— tu URL
 const SHARED_SECRET = "abc123-julieta-xv"; // Debe coincidir con Code.gs
 // ==============================================
+
+/** Snackbar bottom-center opaco (negro) y notorio */
+const Snack = ({ open, kind = "success", title, desc, onClose, duration = 4500 }) => {
+  useEffect(() => {
+    if (!open) return;
+    const t = setTimeout(onClose, duration);
+    return () => clearTimeout(t);
+  }, [open, onClose, duration]);
+
+  if (!open) return null;
+
+  const base =
+    "pointer-events-auto max-w-[560px] w-[calc(100%-2rem)] md:w-auto rounded-xl px-4 py-3 shadow-[0_12px_40px_rgba(0,0,0,0.6)]";
+  const style = {
+    backgroundColor: "#000", // opaco real
+    color: "#fff",
+    border: kind === "error" ? "1px solid rgba(255, 77, 77, 0.6)" : "1px solid rgba(255,255,255,0.08)",
+  };
+
+  return (
+    <div
+      className="fixed inset-x-0 bottom-0 flex justify-center z-[999] isolate pointer-events-none"
+      style={{ paddingBottom: 'calc(16px + env(safe-area-inset-bottom))' }}
+      role="status"
+      aria-live="polite"
+    >
+      <div className={base} style={style}>
+        <p className="font-semibold leading-tight">{title}</p>
+        {desc ? <p className="text-sm opacity-90 leading-snug break-words">{desc}</p> : null}
+        <button
+          onClick={onClose}
+          className="mt-1 text-sm opacity-80 hover:opacity-100 underline underline-offset-2"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const ConfirmPage = () => {
   const [asistencia, setAsistencia] = useState('');
@@ -16,6 +54,10 @@ const ConfirmPage = () => {
   const [familiares, setFamiliares] = useState('');
   const [restricciones, setRestricciones] = useState('');
   const [enviando, setEnviando] = useState(false);
+
+  // estado snackbar
+  const [snack, setSnack] = useState({ open: false, kind: "success", title: "", desc: "" });
+  const showSnack = (kind, title, desc) => setSnack({ open: true, kind, title, desc });
 
   const resetForm = () => {
     setAsistencia('');
@@ -39,8 +81,6 @@ const ConfirmPage = () => {
       restricciones: asistencia === 'si' ? (restricciones || '') : ''
     };
 
-    // Nota: Apps Script no agrega CORS por defecto.
-    // Usamos 'no-cors' para evitar el bloqueo; no podremos leer la respuesta.
     let ok = true;
     try {
       await fetch(WEB_APP_URL, {
@@ -57,20 +97,17 @@ const ConfirmPage = () => {
     setEnviando(false);
 
     if (ok) {
-      toast({
-        title: "¡Confirmación recibida!",
-        description: `Gracias ${payload.nombre}. ${payload.asistencia === 'Sí' ? '¡Te esperamos para celebrar! 🎉' : 'Lamentamos que no puedas venir 💗'}`,
-        duration: 4000,
-      });
+      showSnack(
+        "success",
+        "¡Confirmación recibida!",
+        `Gracias ${payload.nombre}. ${
+          payload.asistencia === 'Sí' ? '¡Te esperamos para celebrar! 🎉' : 'Lamentamos que no puedas venir 💗'
+        }`
+      );
       resetForm();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      toast({
-        title: "Hubo un problema",
-        description: "Intentá nuevamente más tarde.",
-        duration: 4000,
-        variant: "destructive",
-      });
+      showSnack("error", "Hubo un problema", "Intentá nuevamente más tarde.");
     }
   };
 
@@ -229,6 +266,15 @@ const ConfirmPage = () => {
           </form>
         </motion.div>
       </motion.div>
+
+      {/* Snackbar opaco y notorio */}
+      <Snack
+        open={snack.open}
+        kind={snack.kind}
+        title={snack.title}
+        desc={snack.desc}
+        onClose={() => setSnack((s) => ({ ...s, open: false }))}
+      />
     </>
   );
 };

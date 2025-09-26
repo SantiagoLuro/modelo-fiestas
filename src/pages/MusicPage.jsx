@@ -1,16 +1,59 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Music, Send } from 'lucide-react';
-import { toast } from '@/components/ui/use-toast';
 
 // =================== CONFIG ===================
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwWAC77Q6eDfhBcwEb_p-R1M3JBMS_9vPC7JDLcUFYWniN0ku9VfFNY7D88zZDzD3sk/exec"; // <— poné tu URL
-const SHARED_SECRET = "abc123-julieta-xv"; // Debe coincidir con Code.gs
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwWAC77Q6eDfhBcwEb_p-R1M3JBMS_9vPC7JDLcUFYWniN0ku9VfFNY7D88zZDzD3sk/exec";
+const SHARED_SECRET = "abc123-julieta-xv";
 // ==============================================
 
+/** Snackbar bottom-center bien contrastado (negro sólido / texto blanco) */
+const Snack = ({ open, kind = "success", title, desc, onClose, duration = 4500 }) => {
+  useEffect(() => {
+    if (!open) return;
+    const t = setTimeout(onClose, duration);
+    return () => clearTimeout(t);
+  }, [open, onClose, duration]);
+
+  if (!open) return null;
+
+  const base =
+    "pointer-events-auto max-w-[560px] w-[calc(100%-2rem)] md:w-auto rounded-xl px-4 py-3 shadow-[0_12px_40px_rgba(0,0,0,0.6)]";
+  const style = {
+    backgroundColor: "#000", // opaco real
+    color: "#fff",
+    border: kind === "error" ? "1px solid rgba(255, 77, 77, 0.6)" : "1px solid rgba(255,255,255,0.08)",
+  };
+
+  return (
+    <div
+      className="fixed inset-x-0 bottom-0 flex justify-center z-[999] isolate pointer-events-none"
+      style={{ paddingBottom: 'calc(16px + env(safe-area-inset-bottom))' }}
+      role="status"
+      aria-live="polite"
+    >
+      <div className={base} style={style}>
+        <p className="font-semibold leading-tight">{title}</p>
+        {desc ? <p className="text-sm opacity-90 leading-snug break-words">{desc}</p> : null}
+        <button
+          onClick={onClose}
+          className="mt-1 text-sm opacity-80 hover:opacity-100 underline underline-offset-2"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const MusicPage = () => {
+  const [snack, setSnack] = useState({ open: false, kind: "success", title: "", desc: "" });
+
+  const showSnack = (kind, title, desc) =>
+    setSnack({ open: true, kind, title, desc });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const sugerencia = e.target.elements[0].value.trim();
@@ -36,19 +79,10 @@ const MusicPage = () => {
     }
 
     if (ok) {
-      toast({
-        title: "¡Sugerencia enviada!",
-        description: "Gracias por ayudarnos a crear la playlist perfecta. 🎶",
-        duration: 4000,
-      });
+      showSnack("success", "¡Sugerencia enviada!", "Gracias por ayudarnos a crear la playlist perfecta. 🎶");
       e.target.reset();
     } else {
-      toast({
-        title: "Error",
-        description: "No se pudo enviar tu sugerencia. Probá más tarde.",
-        variant: "destructive",
-        duration: 4000,
-      });
+      showSnack("error", "Error", "No se pudo enviar tu sugerencia. Probá más tarde.");
     }
   };
 
@@ -58,6 +92,7 @@ const MusicPage = () => {
         <title>Sugerir Canciones - XV de Julieta</title>
         <meta name="description" content="Sugiere canciones para la playlist de la fiesta de XV de Julieta." />
       </Helmet>
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -65,7 +100,10 @@ const MusicPage = () => {
         transition={{ duration: 0.5 }}
         className="min-h-screen flex items-center justify-center bg-gray-50 p-4"
       >
-        <Link to="/" className="absolute top-4 left-4 text-gray-600 bg-white/50 p-2 rounded-full hover:bg-white transition-colors z-20">
+        <Link
+          to="/"
+          className="absolute top-4 left-4 text-gray-600 bg-white/50 p-2 rounded-full hover:bg-white transition-colors z-20"
+        >
           <ArrowLeft size={24} />
         </Link>
 
@@ -93,6 +131,7 @@ const MusicPage = () => {
             >
               Sugerencias de canciones
             </motion.h1>
+
             <motion.p
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -132,6 +171,15 @@ const MusicPage = () => {
           </div>
         </div>
       </motion.div>
+
+      {/* Snackbar opaco y notorio */}
+      <Snack
+        open={snack.open}
+        kind={snack.kind}
+        title={snack.title}
+        desc={snack.desc}
+        onClose={() => setSnack((s) => ({ ...s, open: false }))}
+      />
     </>
   );
 };

@@ -20,7 +20,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-toast": "^1.1.5",
-    "@supabase/auth-js": "^2.72.0",
+    "@supabase/auth-js": "2.64.0",
     "@supabase/supabase-js": "^2.58.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
@@ -50,7 +50,7 @@
     "tailwindcss": "^3.3.3",
     "terser": "^5.39.0"
   },
-  "overrides": {
-    "@supabase/auth-js": "2.64.0"
+  "engines": {
+    "node": ">=18"
   }
 }

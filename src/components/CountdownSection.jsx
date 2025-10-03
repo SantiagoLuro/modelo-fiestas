@@ -11,7 +11,7 @@ const CountdownSection = () => {
   });
 
   useEffect(() => {
-    const partyDate = new Date('2025-10-24T21:30:00').getTime();
+    const partyDate = new Date('2025-11-19T21:30:00').getTime();
 
     const timer = setInterval(() => {
       const now = new Date().getTime();

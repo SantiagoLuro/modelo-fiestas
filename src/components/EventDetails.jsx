@@ -7,7 +7,7 @@ const EventDetails = () => {
     {
       icon: Calendar,
       title: 'Fecha',
-      info: 'Viernes 24 de Octubre de 2025',
+      info: 'Viernes 10 de Noviembre de 2025',
     },
     {
       icon: Clock,
@@ -17,8 +17,8 @@ const EventDetails = () => {
     {
       icon: MapPin,
       title: 'Lugar',
-      info: 'Janos Maschwitz',
-      subtitle: 'Colectora Este 2555, Ramal Escobar Km 44,5',
+      info: '"Nombre del lugar de la fiesta"',
+      subtitle: '"Calle de la fiesta 123, Ciudad, País"',
     },
     {
       icon: Sparkles,
@@ -29,7 +29,7 @@ const EventDetails = () => {
 
   const handleMapRedirect = () => {
     window.open(
-      'https://www.google.com/maps/search/?api=1&query=Janos+Maschwitz,+Colectora+Este+2555,+Ramal+Escobar+Km+44,5,+1625,+B1623+Ingeniero+Maschwitz,+Provincia+de+Buenos+Aires',
+      '',
       '_blank'
     );
   };

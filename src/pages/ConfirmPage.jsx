@@ -6,7 +6,7 @@ import { ArrowLeft, User, CheckCircle, XCircle, Users, Utensils } from 'lucide-r
 
 // =================== CONFIG ===================
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwWAC77Q6eDfhBcwEb_p-R1M3JBMS_9vPC7JDLcUFYWniN0ku9VfFNY7D88zZDzD3sk/exec"; // <— tu URL
-const SHARED_SECRET = "abc123-julieta-xv"; // Debe coincidir con Code.gs
+const SHARED_SECRET = "abc123-martina-xv"; // Debe coincidir con Code.gs
 // ==============================================
 
 /** Snackbar bottom-center opaco (negro) y notorio */
@@ -114,8 +114,8 @@ const ConfirmPage = () => {
   return (
     <>
       <Helmet>
-        <title>Confirmar Asistencia - XV de Julieta</title>
-        <meta name="description" content="Confirma tu asistencia a la fiesta de XV de Julieta." />
+        <title>Confirmar Asistencia - XV de Martina</title>
+        <meta name="description" content="Confirma tu asistencia a la fiesta de XV de Martina." />
       </Helmet>
 
       <motion.div

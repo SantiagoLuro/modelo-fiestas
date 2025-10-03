@@ -26,14 +26,14 @@ const HeroSection = () => {
             XV
           </motion.h1>
 
-          {/* Subtítulo: Julieta en Klemer Display (elegante) */}
+          {/* Subtítulo: Martina en Klemer Display (elegante) */}
           <motion.h2
             className="text-6xl md:text-7xl playfair text-red-800"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
           >
-            JULIETA
+            Martina
           </motion.h2>
         </motion.div>
 

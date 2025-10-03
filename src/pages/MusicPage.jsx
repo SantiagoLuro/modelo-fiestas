@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, Music, Send } from 'lucide-react';
 
 // =================== CONFIG ===================
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwWAC77Q6eDfhBcwEb_p-R1M3JBMS_9vPC7JDLcUFYWniN0ku9VfFNY7D88zZDzD3sk/exec";
-const SHARED_SECRET = "abc123-julieta-xv";
+const WEB_APP_URL = "";
+const SHARED_SECRET = "abc123-martina-xv";
 // ==============================================
 
 /** Snackbar bottom-center bien contrastado (negro sólido / texto blanco) */
@@ -89,8 +89,8 @@ const MusicPage = () => {
   return (
     <>
       <Helmet>
-        <title>Sugerir Canciones - XV de Julieta</title>
-        <meta name="description" content="Sugiere canciones para la playlist de la fiesta de XV de Julieta." />
+        <title>Sugerir Canciones - XV de Martina</title>
+        <meta name="description" content="Sugiere canciones para la playlist de la fiesta de XV de Martina." />
       </Helmet>
 
       <motion.div

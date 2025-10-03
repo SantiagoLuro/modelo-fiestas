@@ -111,8 +111,8 @@ const PhotoGallery = () => {
           >
             <img
               className="w-full h-full object-cover rounded-2xl"
-              alt="Julieta de niña con gorro"
-              src="https://horizons-cdn.hostinger.com/701bc10f-3750-4d01-8fb2-1c567ca2f257/110c3015a22d66e5c470f02034a6a35b.jpg"
+              alt=""
+              src=""
             />
           </motion.div>
 
@@ -123,8 +123,8 @@ const PhotoGallery = () => {
           >
             <img
               className="w-full h-full object-cover rounded-2xl"
-              alt="Julieta de bebé"
-              src="https://horizons-cdn.hostinger.com/701bc10f-3750-4d01-8fb2-1c567ca2f257/17c2ea9bec6aa740c1f23eb9feb7da8e.jpg"
+              alt=""
+              src=""
             />
           </motion.div>
 
@@ -135,8 +135,8 @@ const PhotoGallery = () => {
           >
             <img
               className="w-full h-full object-cover rounded-2xl"
-              alt="Julieta en la playa"
-              src="https://horizons-cdn.hostinger.com/701bc10f-3750-4d01-8fb2-1c567ca2f257/cb3f8851c2ec63d18541b5ce35fd8d47.jpg"
+              alt=""
+              src=""
             />
           </motion.div>
 
@@ -147,8 +147,8 @@ const PhotoGallery = () => {
           >
             <img
               className="w-full h-full object-cover rounded-2xl"
-              alt="Julieta con bengala"
-              src="https://horizons-cdn.hostinger.com/701bc10f-3750-4d01-8fb2-1c567ca2f257/1af7a43dd9a257046a5e5b756c92071a.jpg"
+              alt=""
+              src=""
             />
           </motion.div>
         </motion.div>

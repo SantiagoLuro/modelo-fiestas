@@ -111,13 +111,13 @@ const AlbumPage = () => {
 
     try {
       const { data, error } = await supabase.storage
-        .from("album-julieta")
+        .from("album-martina")
         .upload(`uploads/${Date.now()}-${file.name}`, file);
 
       if (error) throw error;
 
       const { data: publicUrlData } = supabase.storage
-        .from("album-julieta")
+        .from("album-martina")
         .getPublicUrl(data.path);
 
       addPhoto(publicUrlData.publicUrl);

@@ -13,7 +13,7 @@ const AlbumView = () => {
   useEffect(() => {
     const fetchPhotos = async () => {
       const { data, error } = await supabase.storage
-        .from("album-julieta")
+        .from("album-martina")
         .list("uploads", { limit: 100, sortBy: { column: "created_at", order: "desc" } });
 
       if (error) {
@@ -23,7 +23,7 @@ const AlbumView = () => {
 
       const urls = data.map((file) => {
         const { data: publicUrlData } = supabase.storage
-          .from("album-julieta")
+          .from("album-martina")
           .getPublicUrl(`uploads/${file.name}`);
         return publicUrlData.publicUrl;
       });

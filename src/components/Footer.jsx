@@ -19,7 +19,7 @@ const Footer = () => {
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ duration: 3, repeat: Infinity }}
           >
-            <span className="text-2xl dancing-script gradient-text">Julieta</span>
+            <span className="text-2xl dancing-script gradient-text">Martina</span>
 
           </motion.div>
           
@@ -46,7 +46,7 @@ const Footer = () => {
           viewport={{ once: true }}
         >
           <p className="text-white/50 text-sm">
-            © 2025 - XV Años de Julieta - Una celebración única
+            © 2025 - XV Años de Martina - Una celebración única
           </p>
         </motion.div>
       </div>
